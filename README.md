@@ -123,24 +123,65 @@ npm install
 
 ---
 
-## 🚀 Como Executar
+## 🐳 Executar com Docker
 
-### Backend (Terminal 1)
+### Pré-requisitos
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Subir a Aplicação Completa
+```bash
+# Na raiz do projeto
+docker-compose up --build
+
+# Ou em background
+docker-compose up -d --build
+```
+
+### Acessar
+
+- **Frontend:** http://localhost:8080
+- **Backend:** http://localhost:3000
+- **PostgreSQL:** localhost:5433
+
+### Comandos Úteis
+```bash
+# Ver logs
+docker-compose logs -f
+
+# Parar containers
+docker-compose down
+
+# Parar e remover volumes (apaga dados)
+docker-compose down -v
+
+# Rebuild de um serviço específico
+docker-compose up -d --build backend
+```
+
+---
+
+## 🖥️ Executar Localmente (Sem Docker)
+
+### Backend
 ```bash
 cd backend
+npm install
 npm run start:dev
 ```
 
-O servidor estará rodando em: **http://localhost:3000**
-
-### Frontend (Terminal 2)
+### Frontend
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
 
-A aplicação estará disponível em: **http://localhost:5173**
+### Acessar
 
+ **Frontend:** http://localhost:5173
+ **Backend:** http://localhost:3000
+ 
 ---
 
 ## 📡 Endpoints da API

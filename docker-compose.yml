@@ -1,0 +1,73 @@
+services:
+  # ================================
+  # PostgreSQL Database
+  # ================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: task-manager-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: taskmanager
+    ports:
+      - "5433:5432"  # Alterei a porta para não ter conflito com o PostgreSQL local
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - task-manager-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ================================
+  # Backend (NestJS)
+  # ================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: task-manager-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/taskmanager?schema=public
+      PORT: 3000
+    ports:
+      - "3001:3000"  # Alterei as portas para poder rodar localmente também(não gerar conflito)
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - task-manager-network
+
+  # ================================
+  # Frontend (React + Nginx)
+  # ================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: task-manager-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"  # Alterei as portas para poder rodar localmente também(não gerar conflito)
+    depends_on:
+      - backend
+    networks:
+      - task-manager-network
+
+# ================================
+# Volumes
+# ================================
+volumes:
+  postgres_data:
+    driver: local
+
+# ================================
+# Networks
+# ================================
+networks:
+  task-manager-network:
+    driver: bridge
