@@ -10,38 +10,46 @@ WORKDIR /app
 
 # Copiar arquivos de dependências
 COPY package*.json ./
+COPY tsconfig*.json ./
 COPY prisma ./prisma/
 
-# Instalar dependências
-RUN npm ci
+# Instalar dependências (incluindo devDependencies)
+RUN npm install
 
 # Copiar código fonte
-COPY . .
+COPY src ./src
 
 # Gerar Prisma Client
 RUN npx prisma generate
 
-# Build da aplicação
-RUN npm run build
+# Build com TypeScript Compiler direto
+RUN npx tsc -p tsconfig.build.json
 
 # ==================================
 # Stage 2: Production
 # ==================================
 FROM node:18-alpine AS production
 
-# Instalar OpenSSL para produção também
+# Instalar OpenSSL para produção
 RUN apk add --no-cache openssl libc6-compat
 
 WORKDIR /app
 
-# Copiar apenas o necessário para produção
-COPY --from=builder /app/node_modules ./node_modules
+# Copiar package.json
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Instalar apenas dependências de produção
+RUN npm ci --only=production
+
+# Gerar Prisma Client em produção
+RUN npx prisma generate
+
+# Copiar arquivos buildados
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/package*.json ./
 
 # Expor porta
 EXPOSE 3000
 
-# Comando para rodar a aplicação
+# Comando para rodar
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
