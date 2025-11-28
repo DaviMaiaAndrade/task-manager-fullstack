@@ -390,8 +390,7 @@ Verifique se está enviando:
 
 **Davi**
 - Desenvolvedor Full Stack
-- LinkedIn: [Seu LinkedIn]
-- GitHub: [Seu GitHub]
+- LinkedIn: [https://www.linkedin.com/in/davimaiaandrade/]
 
 ---
 
