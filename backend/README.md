@@ -25,11 +25,6 @@ npx prisma migrate dev --name init
 # Desenvolvimento
 npm run start:dev
 
-# Produção
-npm run build
-npm run start
-```
-
 ## Endpoints
 
 - `GET /tasks` - Listar todas as tasks

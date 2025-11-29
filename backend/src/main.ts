@@ -7,7 +7,7 @@ async function bootstrap() {
   
   // Habilita CORS para o frontend acessar
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'http://localhost:8080'],
     credentials: true,
   });
   
@@ -21,7 +21,7 @@ async function bootstrap() {
   const port = process.env.PORT || 3000;
   await app.listen(port);
   
-  console.log(`🚀 Server running on http://localhost:${port}`);
+  console.log(`Server running on http://localhost:${port}`);
 }
 
 bootstrap();

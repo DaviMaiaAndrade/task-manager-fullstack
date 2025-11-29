@@ -14,6 +14,9 @@ RUN npm ci
 # Copiar código fonte
 COPY . .
 
+# Definir variável de ambiente para build
+ENV VITE_API_URL=http://localhost:3001
+
 # Build da aplicação (gera pasta dist/)
 RUN npm run build
 
